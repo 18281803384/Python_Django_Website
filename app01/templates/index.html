@@ -26,7 +26,7 @@
                     <div class="input_outer">
                         <span class="u_user"></span>
                         <input name="logname" class="text" style="color: #FFFFFF !important" type="text"
-                               placeholder="请输入账户">
+                               placeholder="请输入用户名">
                     </div>
                     <div class="input_outer">
                         <span class="us_uer"></span>
@@ -36,8 +36,9 @@
                     </div>
                     <div class="mgo">
                         <div style="margin-top:-20px">
-                            <a class="act-but submit" href="#" style="color: #FFFFFF; width:50%; float:left">登录</a>
-                            <a class="act-but submit" href="#"
+                            <a id="user_login" class="act-but submit" href="#"
+                               style="color: #FFFFFF; width:50%; float:left">登录</a>
+                            <a id="user_register" class="act-but submit" href="#"
                                style="color: #0096e6;background-color: #FFFFFF; width:50%; float:right">注册</a>
                         </div>
 
@@ -52,5 +53,24 @@
 <script src="{% static 'js/rAF.js' %}"></script>
 <script src="{% static 'js/demo-1.js' %}"></script>
 <script src="{% static 'js/jquery-3.6.4.js' %}"></script>
+<script type="text/javascript">
+    $(function () {
+        // 页面框架执行完成后，该函数自动执行
+        BtnLoginEvent();
+        BtnRegisterEvent();
+    })
+
+    function BtnLoginEvent() {
+        $("#user_login").click(function () {
+            alert("登录")
+        });
+    }
+
+    function BtnRegisterEvent() {
+        $("#user_register").click(function () {
+            alert("注册")
+        });
+    }
+</script>
 </body>
 </html>
