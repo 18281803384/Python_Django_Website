@@ -1,76 +1,91 @@
 {% load static %}
 
-<html lang="en" class="no-js">
+<!DOCTYPE html>
+<html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>login</title>
-    <link rel="stylesheet" type="text/css" href="{% static 'css/normalize.css' %}">
-    <link rel="stylesheet" type="text/css" href="{% static 'css/demo.css' %}">
-    <!--必要样式-->
-    <link rel="stylesheet" type="text/css" href="{% static 'css/component.css' %}">
-    <!--[if IE]>
-    <script src="{% static 'js/html5.js' %}"></script>
-    <script src="{% static 'js/echarts.min.js' %}"></script>
-    <![endif]-->
+    <meta charset="UTF-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Document</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}"/>
+    <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
 </head>
-
 <body>
-<div class="container demo-1">
-    <div class="content">
-        <div id="large-header" class="large-header" style="height: 669px;">
-            <canvas id="demo-canvas" width="1920" height="669"></canvas>
-            <div class="logo_box">
-                <form action="#" name="f" method="post">
-                    <div class="input_outer">
-                        <span class="u_user"></span>
-                        <input name="logname" class="text" style="color: #FFFFFF !important" type="text"
-                               placeholder="请输入用户名">
-                    </div>
-                    <div class="input_outer">
-                        <span class="us_uer"></span>
-                        <input name="logpass" class="text"
-                               style="color: #FFFFFF !important; position:absolute; z-index:100;" value=""
-                               type="password" placeholder="请输入密码">
-                    </div>
-                    <div class="mgo">
-                        <div style="margin-top:-20px">
-                            <a id="user_login" class="act-but submit" href="#"
-                               style="color: #FFFFFF; width:50%; float:left; outline:none">登录</a>
-                            <a id="user_register" class="act-but submit" href="#"
-                               style="color: #0096e6;background-color: #FFFFFF; width:50%; float:right; outline:none">注册</a>
-                        </div>
-
-                    </div>
-                </form>
+<div class="container" style="width: 100%">
+    <div class="box">
+        <div class="transtion-box">
+            <div class="login-box"><h1>欢迎回来</h1>
+                <section><label for="email">邮箱</label><input type="text" id="email"/></section>
+                <section><label for="password">密码</label><input type="password" id="password"/><span>忘记密码?</span>
+                </section>
+                <button id="user_login" type="button">登录</button>
+                <button type="button" class="other">使用<span style="font-weight: 900; color: #455a81">二维码</span>扫码登录
+                </button>
+            </div>
+            <div class="reg-box" style="display: none"><h1>立即注册</h1>
+                <section><label for="username">用户名</label><input type="text" id="username"/></section>
+                <section><label for="email">邮箱</label><input type="text" id="email"/></section>
+                <section><label for="password">密码</label><input type="password" id="password"/></section>
+                <button id="user_register" type="button">注册</button>
+                <button type="button" class="other">使用<span style="font-weight: 900; color: #455a81">二维码</span>扫码注册
+                </button>
             </div>
         </div>
+        <div class="transferToReg"><h1 class="title">还未注册？</h1><span class="subTitle">立即注册，发现大量机会！</span>
+            <button type="button" id="transfetBtn">注册</button>
+        </div>
     </div>
-</div><!-- /container -->
-<script src="{% static 'js/TweenLite.min.js' %}"></script>
-<script src="{% static 'js/EasePack.min.js' %}"></script>
-<script src="{% static 'js/rAF.js' %}"></script>
-<script src="{% static 'js/demo-1.js' %}"></script>
+</div>
 <script src="{% static 'js/jquery-3.6.4.js' %}"></script>
+<script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
 <script type="text/javascript">
     $(function () {
         // 页面框架执行完成后，该函数自动执行
-        BtnLoginEvent();
-        BtnRegisterEvent();
+        bindBtnLoginEvent();
+        bindBtnRegisterEvent();
     })
 
-    function BtnLoginEvent() {
-        $("#user_login").click(function () {
-            alert("登录")
+    function bindBtnRegisterEvent() {
+        $("#user_register").click(function () {
+            alert("注册");
         });
     }
 
-    function BtnRegisterEvent() {
-        $("#user_register").click(function () {
-            alert("注册")
+    function bindBtnLoginEvent() {
+        $("#user_login").click(function () {
+            alert("登录");
         });
     }
 </script>
 </body>
+<script>let transfer = document.getElementById('transfetBtn');
+transfer.addEventListener('click', function () {
+    let login = document.querySelector('.login-box');
+    let reg = document.querySelector('.reg-box');
+    let total = document.querySelector('.transtion-box');
+    let target = document.querySelector('.transferToReg');
+    let title = document.querySelector('.title');
+    let subTitle = document.querySelector('.subTitle');
+    transfer.innerText === '注册' ? (() => {
+        target.style.left = 0;
+        total.style.left = 260 + 'px';
+        transfer.innerText = '登录';
+        title.innerText = '已有帐号？';
+        subTitle.innerText = '有帐号就登录吧，好久不见了！';
+        setTimeout(() => {
+            login.style.display = 'none';
+            reg.style.display = 'flex';
+        }, 300);
+    })() : (() => {
+        target.style.left = 640 + 'px';
+        total.style.left = 0;
+        transfer.innerText = '注册';
+        title.innerText = '还未注册？';
+        subTitle.innerText = '立即注册，发现大量机会！';
+        setTimeout(() => {
+            login.style.display = 'flex';
+            reg.style.display = 'none';
+        }, 300);
+    })();
+});</script>
 </html>
