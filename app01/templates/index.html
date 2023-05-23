@@ -15,24 +15,46 @@
     <div class="box">
         <div class="transtion-box">
             <div class="login-box"><h1>欢迎回来</h1>
-                <section><label for="email">邮箱</label><input type="text" id="email"/></section>
-                <section><label for="password">密码</label><input type="password" id="password"/><span>忘记密码?</span>
+                <section>
+                    <label for="mobile">手机号</label>
+                    <input type="text" id="login_mobile"/>
+                </section>
+                <section>
+                    <label for="password">密码</label>
+                    <input type="password" id="login_password"/>
+                    <span>忘记密码?</span>
                 </section>
                 <button id="user_login" type="button">登录</button>
                 <button type="button" class="other">使用<span style="font-weight: 900; color: #455a81">二维码</span>扫码登录
                 </button>
             </div>
             <div class="reg-box" style="display: none"><h1>立即注册</h1>
-                <section><label for="username">用户名</label><input type="text" id="username"/></section>
-                <section><label for="email">邮箱</label><input type="text" id="email"/></section>
-                <section><label for="password">密码</label><input type="password" id="password"/></section>
+                <section>
+                    <label for="username">用户名</label>
+                    <input type="text" id="reg_username"/>
+                </section>
+                <section>
+                    <label for="mobile">手机号</label>
+                    <input type="text" id="reg_mobile"/>
+                </section>
+                <section>
+                    <label for="password">密码</label>
+                    <input type="password" id="reg_password"/>
+                </section>
                 <button id="user_register" type="button">注册</button>
                 <button type="button" class="other">使用<span style="font-weight: 900; color: #455a81">二维码</span>扫码注册
                 </button>
             </div>
         </div>
-        <div class="transferToReg"><h1 class="title">还未注册？</h1><span class="subTitle">立即注册，发现大量机会！</span>
+        <div class="transferToReg">
+            <h1 class="title">还未注册？</h1>
+            <span class="subTitle">立即注册，发现大量机会！</span>
             <button type="button" id="transfetBtn">注册</button>
+        </div>
+    </div>
+    <div id="message-dock">
+        <div id="message-sleeve" class="group">
+            <p><span class="sprite message-icon"></span><span id="message-text"></span><a class="dismiss"></a></p>
         </div>
     </div>
 </div>
@@ -47,7 +69,29 @@
 
     function bindBtnRegisterEvent() {
         $("#user_register").click(function () {
-            alert("注册");
+            let user_name = $("#reg_username").val();
+            let user_mobile = $("#reg_mobile").val();
+            let user_password = $("#reg_password").val();
+
+            $.ajax({
+                url: "/index/user_register",
+                type: "post",
+                data: {
+                    user_name: user_name,
+                    user_mobile: user_mobile,
+                    user_password: user_password,
+                },
+                dataType: "json",
+                success: function (res) {
+                    if (res.status) {
+                        $("#transfetBtn").click();
+                    } else {
+                        // 清空input标签的值
+                        $("#reg_mobile").val('');
+                        $("#reg_password").val('');
+                    }
+                }
+            })
         });
     }
 
@@ -58,34 +102,39 @@
     }
 </script>
 </body>
-<script>let transfer = document.getElementById('transfetBtn');
-transfer.addEventListener('click', function () {
-    let login = document.querySelector('.login-box');
-    let reg = document.querySelector('.reg-box');
-    let total = document.querySelector('.transtion-box');
-    let target = document.querySelector('.transferToReg');
-    let title = document.querySelector('.title');
-    let subTitle = document.querySelector('.subTitle');
-    transfer.innerText === '注册' ? (() => {
-        target.style.left = 0;
-        total.style.left = 260 + 'px';
-        transfer.innerText = '登录';
-        title.innerText = '已有帐号？';
-        subTitle.innerText = '有帐号就登录吧，好久不见了！';
-        setTimeout(() => {
-            login.style.display = 'none';
-            reg.style.display = 'flex';
-        }, 300);
-    })() : (() => {
-        target.style.left = 640 + 'px';
-        total.style.left = 0;
-        transfer.innerText = '注册';
-        title.innerText = '还未注册？';
-        subTitle.innerText = '立即注册，发现大量机会！';
-        setTimeout(() => {
-            login.style.display = 'flex';
-            reg.style.display = 'none';
-        }, 300);
-    })();
-});</script>
+<script>
+    let transfer = document.getElementById('transfetBtn');
+    transfer.addEventListener('click', function () {
+        // 清空所有input标签的值
+        $("input").val('');
+
+        let login = document.querySelector('.login-box');
+        let reg = document.querySelector('.reg-box');
+        let total = document.querySelector('.transtion-box');
+        let target = document.querySelector('.transferToReg');
+        let title = document.querySelector('.title');
+        let subTitle = document.querySelector('.subTitle');
+        transfer.innerText === '注册' ? (() => {
+            target.style.left = 0;
+            total.style.left = 260 + 'px';
+            transfer.innerText = '登录';
+            title.innerText = '已有帐号？';
+            subTitle.innerText = '有帐号就登录吧，好久不见了！';
+            setTimeout(() => {
+                login.style.display = 'none';
+                reg.style.display = 'flex';
+            }, 300);
+        })() : (() => {
+            target.style.left = 640 + 'px';
+            total.style.left = 0;
+            transfer.innerText = '注册';
+            title.innerText = '还未注册？';
+            subTitle.innerText = '立即注册，发现大量机会！';
+            setTimeout(() => {
+                login.style.display = 'flex';
+                reg.style.display = 'none';
+            }, 300);
+        })();
+    });
+</script>
 </html>

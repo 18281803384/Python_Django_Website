@@ -20,5 +20,6 @@ from django.urls import path
 from app01 import views
 
 urlpatterns = [
-    path('index/', views.show_index),
+    path('index', views.show_index),
+    path('index/user_register', views.user_register),
 ]
