@@ -20,6 +20,11 @@ from django.urls import path
 from app01 import views
 
 urlpatterns = [
+    # 登录页面
     path('index', views.show_index),
     path('index/user_register', views.user_register),
+    path('index/user_login', views.user_login),
+
+    # 首页
+    path('home_page', views.home_page),
 ]

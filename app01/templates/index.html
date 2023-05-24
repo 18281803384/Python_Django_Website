@@ -60,6 +60,7 @@
 </div>
 <script src="{% static 'js/jquery-3.6.4.js' %}"></script>
 <script src="{% static 'plugins/bootstrap-3.4.1-dist/js/bootstrap.min.js' %}"></script>
+<script src="{% static 'js/message.js' %}"></script>
 <script type="text/javascript">
     $(function () {
         // 页面框架执行完成后，该函数自动执行
@@ -67,12 +68,82 @@
         bindBtnRegisterEvent();
     })
 
+    // 校验用户名函数
+    function verify_user_name(user_name) {
+        // 匹配规则
+        let reg = /^[1-9a-zA-Z\u4e00-\u9fa5][0-9a-zA-Z\u4e00-\u9fa5]+$/;
+        if (user_name === '') {
+            return '用户名不能为空！';
+        } else if (user_name.match(reg) == null || user_name.length > 16) {
+            // 判断用户名是否符合匹配规则
+            // 清空指定input标签的值
+            $("#reg_username").val('');
+            return '请输入小于16位格式正确的用户名';
+        }
+    }
+
+    // 校验手机号函数
+    function verify_user_mobile(user_mobile) {
+        // 匹配规则
+        let reg = /^(0|86|17951)?(13|14|15|16|17|18|19)[0-9]{9}$/;
+        if (user_mobile === '') {
+            // 判断手机号是否为空
+            return '手机号不能为空';
+        } else if (user_mobile.match(reg) == null) {
+            // 判断手机号是否符合匹配规则
+            // 清空指定input标签的值
+            $("#reg_mobile").val('');
+            return '请输入11位正确的手机号';
+        }
+    }
+
+    // 校验密码函数
+    function verify_user_password(user_password) {
+        if (user_password === '') {
+            return '密码不能为空！';
+        } else if (user_password.length > 16) {
+            // 判断用户名是否符合匹配规则
+            // 清空指定input标签的值
+            $("reg_password").val('');
+            return '请输入小于16位密码';
+        }
+    }
+
+    // jQuery点击弹出信息提示框插件
+    function message_box(message, type_string = 'warning') {
+        // 调用的插件 https://www.lanrenzhijia.com/jquery/9014.html
+        $.message({
+            message: message,
+            duration: 2000,
+            type: type_string
+        });
+    }
+
     function bindBtnRegisterEvent() {
         $("#user_register").click(function () {
+            // 获取用户填写的表单数据
             let user_name = $("#reg_username").val();
             let user_mobile = $("#reg_mobile").val();
             let user_password = $("#reg_password").val();
 
+            // 调用用户名，手机号，密码校验函数
+            let user_name_message = verify_user_name(user_name);
+            let user_mobile_message = verify_user_mobile(user_mobile);
+            let user_password_message = verify_user_password(user_password);
+
+            // 判断用户名，手机号，密码如果存在错误消息，就给出提示
+            if (user_name_message) {
+                message_box(user_name_message);
+                return;
+            } else if (user_mobile_message) {
+                message_box(user_mobile_message);
+                return;
+            } else if (user_password_message) {
+                message_box(user_password_message);
+                return;
+            }
+
+            // 发起ajax请求
             $.ajax({
                 url: "/index/user_register",
                 type: "post",
@@ -83,12 +154,17 @@
                 },
                 dataType: "json",
                 success: function (res) {
+                    let type_string;
                     if (res.status) {
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        message_box(str_div, type_string = 'success');
                         $("#transfetBtn").click();
                     } else {
-                        // 清空input标签的值
+                        // 清空指定input标签的值
                         $("#reg_mobile").val('');
                         $("#reg_password").val('');
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        message_box(str_div, type_string = 'error');
                     }
                 }
             })
@@ -97,7 +173,43 @@
 
     function bindBtnLoginEvent() {
         $("#user_login").click(function () {
-            alert("登录");
+            // 获取用户填写的表单数据
+            let user_mobile = $("#login_mobile").val();
+            let user_password = $("#login_password").val();
+
+            // 调用用户名，手机号，密码校验函数
+            let user_mobile_message = verify_user_mobile(user_mobile);
+            let user_password_message = verify_user_password(user_password);
+
+            // 判断用户名，手机号，密码如果存在错误消息，就给出提示
+            if (user_mobile_message) {
+                message_box(user_mobile_message);
+                return;
+            } else if (user_password_message) {
+                message_box(user_password_message);
+                return;
+            }
+
+            // 发起ajax请求
+            $.ajax({
+                url: "/index/user_login",
+                type: "post",
+                data: {
+                    user_mobile: user_mobile,
+                    user_password: user_password,
+                },
+                dataType: "json",
+                success: function (res) {
+                    let type_string;
+                    if (res.status) {
+                        // 页面跳转
+                        window.location.href = "/home_page";
+                    } else {
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        message_box(str_div, type_string = 'error');
+                    }
+                }
+            })
         });
     }
 </script>
