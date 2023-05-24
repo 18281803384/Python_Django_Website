@@ -24,6 +24,7 @@ urlpatterns = [
     path('index', views.show_index),
     path('index/user_register', views.user_register),
     path('index/user_login', views.user_login),
+    path('index/change_password', views.change_password),
 
     # 首页
     path('home_page', views.home_page),

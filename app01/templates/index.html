@@ -4,8 +4,6 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8"/>
-    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Document</title>
     <link rel="stylesheet" href="{% static 'css/index.css' %}"/>
     <link rel="stylesheet" href="{% static 'plugins/bootstrap-3.4.1-dist/css/bootstrap.min.css' %}">
@@ -22,7 +20,7 @@
                 <section>
                     <label for="password">密码</label>
                     <input type="password" id="login_password"/>
-                    <span>忘记密码?</span>
+                    <span id="forgot_password">忘记密码?</span>
                 </section>
                 <button id="user_login" type="button">登录</button>
                 <button type="button" class="other">使用<span style="font-weight: 900; color: #455a81">二维码</span>扫码登录
@@ -52,6 +50,31 @@
             <button type="button" id="transfetBtn">注册</button>
         </div>
     </div>
+    <!-- Modal -->
+    <div class="modal fade" id="ChangePasswordModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">忘记密码</h4>
+                </div>
+                <div class="modal-body">
+                    <section>
+                        <label for="mobile">手机号</label>
+                        <input type="text" id="change_mobile"/>
+                    </section>
+                    <section>
+                        <label for="password">密码</label>
+                        <input type="password" id="change_password"/>
+                    </section>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button id="confirm_change_password" type="button" class="btn btn-primary">确认修改密码</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- jQuery点击弹出信息提示框插件 -->
     <div id="message-dock">
         <div id="message-sleeve" class="group">
             <p><span class="sprite message-icon"></span><span id="message-text"></span><a class="dismiss"></a></p>
@@ -66,6 +89,8 @@
         // 页面框架执行完成后，该函数自动执行
         bindBtnLoginEvent();
         bindBtnRegisterEvent();
+        bindBtnChangePasswordEvent();
+        bindBtnForgotPasswordEvent();
     })
 
     // 校验用户名函数
@@ -126,12 +151,12 @@
             let user_mobile = $("#reg_mobile").val();
             let user_password = $("#reg_password").val();
 
-            // 调用用户名，手机号，密码校验函数
+            // 调用校验函数
             let user_name_message = verify_user_name(user_name);
             let user_mobile_message = verify_user_mobile(user_mobile);
             let user_password_message = verify_user_password(user_password);
 
-            // 判断用户名，手机号，密码如果存在错误消息，就给出提示
+            // 判断如果存在错误消息，就给出提示
             if (user_name_message) {
                 message_box(user_name_message);
                 return;
@@ -156,14 +181,14 @@
                 success: function (res) {
                     let type_string;
                     if (res.status) {
-                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">' + res.data + '<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
                         message_box(str_div, type_string = 'success');
                         $("#transfetBtn").click();
                     } else {
                         // 清空指定input标签的值
                         $("#reg_mobile").val('');
                         $("#reg_password").val('');
-                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">' + res.data + '<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
                         message_box(str_div, type_string = 'error');
                     }
                 }
@@ -177,11 +202,11 @@
             let user_mobile = $("#login_mobile").val();
             let user_password = $("#login_password").val();
 
-            // 调用用户名，手机号，密码校验函数
+            // 调用校验函数
             let user_mobile_message = verify_user_mobile(user_mobile);
             let user_password_message = verify_user_password(user_password);
 
-            // 判断用户名，手机号，密码如果存在错误消息，就给出提示
+            // 判断如果存在错误消息，就给出提示
             if (user_mobile_message) {
                 message_box(user_mobile_message);
                 return;
@@ -205,11 +230,71 @@
                         // 页面跳转
                         window.location.href = "/home_page";
                     } else {
-                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">'+res.data+'<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
+                        let str_div = '<div style="color:#333;font-weight:bold;font-size:16px;">' + res.data + '<div><span style="color:lightgrey;font-size:small;">3秒后自动关闭</span>'
                         message_box(str_div, type_string = 'error');
                     }
                 }
             })
+        });
+    }
+
+    function bindBtnChangePasswordEvent() {
+        $("#confirm_change_password").click(function () {
+            // 获取用户需要修改的表单数据
+            let user_mobile = $("#login_mobile").val();
+            let user_password = $("#change_password").val();
+
+            // 调用校验函数
+            let user_password_message = verify_user_password(user_password);
+
+            // 判断如果存在错误消息，就给出提示
+            if (user_password_message) {
+                message_box(user_password_message);
+                return;
+            }
+
+            $.ajax({
+                url: '/index/change_password',
+                type: "post",
+                data: {
+                    user_mobile: user_mobile,
+                    user_password: user_password,
+                },
+                dataType: "json",
+                success: function (res) {
+                    let type_string;
+                    if (res.status) {
+                        message_box(res.data, type_string = 'success');
+                        $('#ChangePasswordModal').modal('hide');
+                        $("#login_password").val('');
+                        $("#ChangePasswordModal input").val('');
+                    }else {
+                        message_box(res.data, type_string = 'error');
+                    }
+                }
+            })
+        });
+    }
+
+    function bindBtnForgotPasswordEvent() {
+        $("#forgot_password").click(function () {
+            // 获取登录页面的手机号
+            let user_mobile = $("#login_mobile").val();
+            // 校验手机号
+            let user_mobile_message = verify_user_mobile(user_mobile);
+
+            // 判断如果存在错误消息，就给出提示
+            if (user_mobile_message) {
+                message_box(user_mobile_message);
+                return;
+            }
+
+            // 手动打开模态框
+            $('#ChangePasswordModal').modal('show');
+
+            // 赋值手机号
+            $("#change_mobile").val(user_mobile);
+            $("#change_mobile").attr("disabled", "disabled");
         });
     }
 </script>

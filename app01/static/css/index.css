@@ -54,11 +54,24 @@ body {
     margin-bottom: 30px;
 }
 
+.container #ChangePasswordModal .modal-body section {
+    margin-bottom: 30px;
+}
+
 .container .box .transtion-box section label {
     font-size: 14px;
     color: #909399;
     text-transform: uppercase;
     margin-bottom: 8px;
+}
+
+.container #ChangePasswordModal .modal-body section label {
+    font-size: 14px;
+    color: #909399;
+    text-transform: uppercase;
+    margin-bottom: 8px;
+    width: 100%;
+    text-align: center;
 }
 
 .container .box .transtion-box section input {
@@ -70,6 +83,19 @@ body {
     text-align: center;
     padding: 4px 10px;
     border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+}
+
+.container #ChangePasswordModal .modal-body section input {
+    width: 50%;
+    outline: 0;
+    border: none;
+    font-size: 18px;
+    color: tomato;
+    text-align: center;
+    padding: 4px 10px;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.4);
+    display: block;
+    margin-left: 25%;
 }
 
 .container .box .transtion-box section span {

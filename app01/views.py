@@ -54,6 +54,18 @@ def user_login(request):
     return JsonResponse({"status": False, "data": "用户名或密码错误！"})
 
 
+@csrf_exempt
+def change_password(request):
+    user_mobile = request.POST.get("user_mobile")
+    user_password = request.POST.get("user_password")
+    # 判断数据是否存在，存在返回True 不存在返回False
+    exists = models.user.objects.filter(user_mobile=user_mobile).exists()
+    if exists:
+        models.user.objects.filter(user_mobile=user_mobile).update(user_password=int(user_password))
+        return JsonResponse({"status": True, "data": "修改成功！"})
+    return JsonResponse({"status": False, "data": "修改失败！手机号不存在，请刷新再试。"})
+
+
 def home_page(request):
     """
     :param request:
