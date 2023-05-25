@@ -17,15 +17,16 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
-from app01 import views
+from app01.views import Login, Home
 
 urlpatterns = [
     # 登录页面
-    path('index', views.show_index),
-    path('index/user_register', views.user_register),
-    path('index/user_login', views.user_login),
-    path('index/change_password', views.change_password),
+    path('index', Login.show_index),
+    path('index/user_register', Login.user_register),
+    path('index/user_login', Login.user_login),
+    path('index/change_password', Login.change_password),
+    path('index/image_code',Login.image_code),
 
     # 首页
-    path('home_page', views.home_page),
+    path('home_page', Home.home_page),
 ]
