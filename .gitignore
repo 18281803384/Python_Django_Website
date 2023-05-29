@@ -1,0 +1,31 @@
+# Pycharm（默认生成的文件）
+.idea/
+.DS_Store
+
+# Python 默认生成的缓存文件
+__Pycache__/
+*.py[cod]
+*$py.class
+
+# Django stuff:
+*.sqlite3
+
+# database migrations（数据库迁移日志）
+*/migrations/*.py
+!*/migrations/__init__.py
+
+# Build and Release Folders
+bin-debug/
+bin-release/
+[Oo]bj/
+[Bb]in/
+
+# Other files and folders
+.settings/
+
+# Executables
+*.swf
+*.air
+*.ipa
+*.apk
+
